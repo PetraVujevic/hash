@@ -11,16 +11,13 @@ import Data.Char
 import Text.ParserCombinators.Parsec hiding ((<|>))
 import Control.Applicative hiding (many)
 
+parseInput :: String -> Cmd
 parseInput input = case parse parseCmd "" input of
-    Left err -> case parse parseComm "" input of
-	   Left err -> error "No match."
-	   Right c -> c
+    Left err ->  error "No match."
     Right c -> c
 	
 parseCmd :: Parser Cmd
-parseCmd = do 
-      parseAssign 
-  <|> parseComm
+parseCmd = try parseAssign <|> parseComm
 
 parseAssign :: Parser Cmd
 parseAssign = do
